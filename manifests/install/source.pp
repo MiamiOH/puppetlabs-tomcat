@@ -14,6 +14,7 @@ define tomcat::install::source (
   $manage_home,
   $source_url,
   $source_strip_first_dir,
+  $environment,
   $user,
   $group,
 ) {
@@ -39,7 +40,8 @@ define tomcat::install::source (
   }
 
   ensure_resource('staging::file',$filename, {
-    'source' => $source_url,
+    'source'      => $source_url,
+    'environment' => $environment,
   })
 
   # FM-5578 workaround for strict umodes
@@ -53,12 +55,13 @@ define tomcat::install::source (
   })
 
   staging::extract { "${name}-${filename}":
-    source  => "${::staging::path}/tomcat/${filename}",
-    target  => $catalina_home,
-    require => Staging::File[$filename],
-    unless  => "test -f ${catalina_home}/NOTICE",
-    user    => $user,
-    group   => $group,
-    strip   => $_strip,
+    source      => "${::staging::path}/tomcat/${filename}",
+    target      => $catalina_home,
+    require     => Staging::File[$filename],
+    unless      => "test -f ${catalina_home}/NOTICE",
+    user        => $user,
+    group       => $group,
+    environment => $environment,
+    strip       => $_strip,
   }
 }
