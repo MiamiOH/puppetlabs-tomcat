@@ -14,9 +14,9 @@ define tomcat::install::source (
   $manage_home,
   $source_url,
   $source_strip_first_dir,
-  $environment,
   $user,
   $group,
+  $environment = undef,
 ) {
   tag(sha1($catalina_home))
   include ::staging
